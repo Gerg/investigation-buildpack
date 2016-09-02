@@ -1,0 +1,12 @@
+#!/usr/bin/env bash
+
+echo "Investigation beginning at $(date +%Y-%m-%dZ%H:%M:%S)"
+
+for i in {0..179}; do
+	echo "Time remaining: $(( 900 - 5*$i ))"
+	sleep 5
+done
+
+echo "Time's up! Failing to compile."
+
+exit 1
