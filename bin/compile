@@ -1,12 +1,26 @@
 #!/usr/bin/env bash
 
-echo "Investigation beginning at $(date +%Y-%m-%dZ%H:%M:%S)"
+echo "Investigation in task '$CF_INSTANCE_GUID' beginning at $(date +%Y-%m-%dZ%H:%M:%S)"
 
-for i in {0..179}; do
-	echo "Time remaining: $(( 900 - 5*$i ))"
-	sleep 5
-done
+if [[ -n "$INV_COMMAND" ]]; then
+	bash -c "$INV_COMMAND"
+fi
 
+INV_WAIT_DURATION_SECONDS=${INV_WAIT_DURATION_SECONDS:-900}
+INV_WAIT=${INV_WAIT:-true}
+
+if [[ "$INV_WAIT" == "true" ]]; then
+	wait_count=$(( $INV_WAIT_DURATION_SECONDS / 5 ))
+	actual_wait_duration=$(( 5 * $wait_count ))
+	echo "Waiting for $actual_wait_duration seconds (rounding down from $INV_WAIT_DURATION_SECONDS)"
+
+	for i in $(seq 1 $wait_count); do
+		echo "Time remaining: $(( $actual_wait_duration - 5*($i - 1) ))"
+		sleep 5
+	done
+fi
+
+echo "Investigation concluding at $(date +%Y-%m-%dZ%H:%M:%S)"
 echo "Time's up! Failing to compile."
 
 exit 1
