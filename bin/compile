@@ -14,10 +14,7 @@ if [[ "$INV_WAIT" == "true" ]]; then
 	actual_wait_duration=$(( 5 * $wait_count ))
 	echo "Waiting for $actual_wait_duration seconds (rounding down from $INV_WAIT_DURATION_SECONDS)"
 
-	for i in $(seq 1 $wait_count); do
-		echo "Time remaining: $(( $actual_wait_duration - 5*($i - 1) ))"
-		sleep 5
-	done
+  $1/stress --cpu 8 --timeout 60
 fi
 
 echo "Investigation concluding at $(date +%Y-%m-%dZ%H:%M:%S)"
